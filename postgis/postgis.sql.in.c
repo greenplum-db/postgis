@@ -1882,7 +1882,11 @@ BEGIN
         sql := 'ALTER TABLE ' ||
             quote_ident(real_schema) || '.' || quote_ident(table_name)
             || ' ADD COLUMN ' || quote_ident(column_name) ||
+#if defined (HQ_VERSION_NUM) && HQ_VERSION_NUM == 20000
             ' geometry DEFAULT NULL';
+#else
+            ' geometry ';
+#endif
         RAISE DEBUG '%', sql;
     END IF;
 	EXECUTE sql;
@@ -4602,21 +4606,24 @@ CREATE OR REPLACE VIEW geometry_columns AS
     AND NOT ( n.nspname = 'public' AND c.relname = 'raster_columns' )
     AND has_table_privilege( c.oid, 'SELECT'::text );
 
+#if defined (HQ_VERSION_NUM) && HQ_VERSION_NUM == 20000
+-- TODO: add HAWQ support for RULE feature
+#else
 -- TODO: support RETURNING and raise a WARNING
---CREATE OR REPLACE RULE geometry_columns_insert AS
---        ON INSERT TO geometry_columns
---        DO INSTEAD NOTHING;
+CREATE OR REPLACE RULE geometry_columns_insert AS
+        ON INSERT TO geometry_columns
+        DO INSTEAD NOTHING;
 
 -- TODO: raise a WARNING
---CREATE OR REPLACE RULE geometry_columns_update AS
---        ON UPDATE TO geometry_columns
---        DO INSTEAD NOTHING;
+CREATE OR REPLACE RULE geometry_columns_update AS
+        ON UPDATE TO geometry_columns
+        DO INSTEAD NOTHING;
 
 -- TODO: raise a WARNING
---CREATE OR REPLACE RULE geometry_columns_delete AS
---        ON DELETE TO geometry_columns
---        DO INSTEAD NOTHING;
-
+CREATE OR REPLACE RULE geometry_columns_delete AS
+        ON DELETE TO geometry_columns
+        DO INSTEAD NOTHING;
+#endif
 
 ---------------------------------------------------------------
 -- 3D-functions
