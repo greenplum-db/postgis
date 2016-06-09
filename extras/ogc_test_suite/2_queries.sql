@@ -165,13 +165,16 @@ WHERE f_table_name = 'streams';
 -- For this test we will check to see that the correct value of srtext is 
 -- represented in the SPATIAL_REF_SYS table/view
 --
--- ANSWER: 'PROJCS["UTM_ZONE_14N", GEOGCS["World Geodetic System 72", 
---           DATUM["WGS_72",  SPHEROID["NWL_10D", 6378135, 298.26]], 
---           PRIMEM["Greenwich", 0], UNIT["Meter", 1.0]], 
---           PROJECTION["Traverse_Mercator"], PARAMETER["False_Easting", 500000.0], 
---           PARAMETER["False_Northing", 0.0], PARAMETER["Central_Meridian", -99.0], 
---           PARAMETER["Scale_Factor", 0.9996], PARAMETER["Latitude_of_origin", 0.0], 
---           UNIT["Meter", 1.0]]'	
+-- ANSWER: PROJCS["UTM_ZONE_14N", GEOGCS["World Geodetic System 72", 
+--         DATUM["WGS_72",  SPHEROID["NWL_10D", 6378135, 298.26]], 
+--         PRIMEM["Greenwich", 0], UNIT["Meter", 1.0]], 
+--         PROJECTION["Traverse_Mercator"], 
+--         PARAMETER["False_Easting", 500000.0], 
+--         PARAMETER["False_Northing", 0.0], 
+--         PARAMETER["Central_Meridian", -99.0], 
+--         PARAMETER["Scale_Factor", 0.9996], 
+--         PARAMETER["Latitude_of_origin", 0.0], 
+--         UNIT["Meter", 1.0]]	
 --
 --================================
 --
@@ -206,7 +209,7 @@ WHERE name = 'Blue Lake';
 -- GeometryType(g Geometry) : String
 -- For this test we will determine the type of Route 75.
 --
--- ANSWER: 9 (which corresponds to 'MULTILINESTRING')
+-- ANSWER: MULTILINESTRING
 --
 --================================
 --
@@ -238,7 +241,7 @@ WHERE name = 'Route 75';
 -- ST_AsText(g Geometry) : String
 -- For this test we will determine the WKT representation of Goose Island.
 --
--- ANSWER: 'POLYGON( ( 67 13, 67 18, 59 18, 59 13, 67 13) )'
+-- ANSWER: POLYGON((67 13, 67 18, 59 18, 59 13, 67 13))
 --
 --================================
 --
@@ -253,7 +256,7 @@ WHERE name = 'Goose Island';
 -- We will test by applying AsText to the result of PolygonFromText to the 
 -- result of AsBinary.
 --
--- ANSWER: 'POLYGON( ( 67 13, 67 18, 59 18, 59 13, 67 13) )'
+-- ANSWER: POLYGON((67 13, 67 18, 59 18, 59 13, 67 13))
 --
 --================================
 --
@@ -316,7 +319,7 @@ WHERE name = 'Blue Lake';
 -- For this test we will determine the boundary of Goose Island.
 -- NOTE: The boundary result is as defined in 3.12.3.2 of 96-015R1.
 -- 
--- ANSWER: 'LINESTRING( 67 13, 67 18, 59 18, 59 13, 67 13 )'
+-- ANSWER: LINESTRING(67 13, 67 18, 59 18, 59 13, 67 13)
 --
 --================================
 --
@@ -347,7 +350,7 @@ WHERE name = 'Goose Island';
 -- ST_Envelope(g Geometry) : Geometry
 -- For this test we will determine the envelope of Goose Island.
 -- 
--- ANSWER: 'POLYGON( ( 59 13, 59 18, 67 18, 67 13, 59 13) )'
+-- ANSWER: POLYGON((59 13, 59 18, 67 18, 67 13, 59 13))
 --
 --================================
 --
@@ -438,7 +441,7 @@ WHERE name = 'Cam Bridge';
 -- ST_StartPoint(c Curve) : Point
 -- For this test we will determine the start point of road segment 102.
 --
--- ANSWER: 'POINT( 0 18 )'
+-- ANSWER: POINT(0 18)
 --
 --================================
 --
@@ -451,7 +454,7 @@ WHERE fid = 102;
 -- ST_EndPoint(c Curve) : Point
 -- For this test we will determine the end point of road segment 102.
 --
--- ANSWER: 'POINT( 44 31 )'
+-- ANSWER: POINT(44 31)
 --
 --================================
 --
@@ -498,11 +501,11 @@ WHERE name = 'Goose Island';
 -- Length(c Curve) : Double Precision
 -- For this test we will determine the length of road segment 106.
 --
--- ANSWER: 26.00 (meters)
+-- ANSWER: 26.00 
 --
 --================================
 --
-SELECT Length(centerline)
+SELECT ST_Length(centerline)
 FROM road_segments 
 WHERE fid = 106;
 --
@@ -532,7 +535,7 @@ WHERE fid = 102;
 -- ST_PointN(l LineString, n Integer) : Point
 -- For this test we will determine the 1st point in road segment 102.
 --
--- ANSWER: 'POINT( 0 18 )'
+-- ANSWER: POINT(0 18)
 --
 --================================
 --
@@ -553,7 +556,7 @@ WHERE fid = 102;
 -- ST_Centroid(s Surface) : Point
 -- For this test we will determine the centroid of Goose Island.
 --
--- ANSWER: 'POINT( 63 15.5 )'
+-- ANSWER: POINT(63 15.5)
 --
 --================================
 --
@@ -585,7 +588,7 @@ WHERE name = 'Goose Island';
 -- Area(s Surface) : Double Precision
 -- For this test we will determine the area of Goose Island.
 --
--- ANSWER: 40.00 (square meters)
+-- ANSWER: 40.00 
 --
 --================================
 --
@@ -606,7 +609,7 @@ WHERE name = 'Goose Island';
 -- ST_ExteriorRing(p Polygon) : LineString
 -- For this test we will determine the exteroir ring of Blue Lake.
 --
--- ANSWER: 'LINESTRING(52 18, 66 23, 73  9, 48  6, 52 18)'
+-- ANSWER: LINESTRING(52 18, 66 23, 73  9, 48  6, 52 18)
 --
 --================================
 --
@@ -632,7 +635,7 @@ WHERE name = 'Blue Lake';
 -- InteriorRingN(p Polygon, n Integer) : LineString
 -- For this test we will determine the first interior ring of Blue Lake.
 --
--- ANSWER: 'LINESTRING(59 18, 67 18, 67 13, 59 13, 59 18)'
+-- ANSWER: LINESTRING(59 18, 67 18, 67 13, 59 13, 59 18)
 --
 --================================
 --
@@ -666,7 +669,7 @@ WHERE name = 'Route 75';
 -- ST_GeometryN(g GeometryCollection, n Integer) : Geometry
 -- For this test we will determine the second geometry in Route 75.
 --
--- ANSWER: 'LINESTRING( 16 0, 16 23, 16 48 )'
+-- ANSWER: LINESTRING( 16 0, 16 23, 16 48 )
 --
 --================================
 --
@@ -724,11 +727,11 @@ WHERE name = 'Route 75';
 -- For this test we will determine the length of Route 75.
 -- NOTE: This makes no semantic sense in our example...
 --
--- ANSWER: 96.00 (meters)
+-- ANSWER: 96.00 
 --
 --================================
 --
-SELECT Length(centerlines)
+SELECT ST_Length(centerlines)
 FROM divided_routes 
 WHERE name = 'Route 75';
 --
@@ -745,7 +748,7 @@ WHERE name = 'Route 75';
 -- ST_Centroid(ms MultiSurface) : Point
 -- For this test we will determine the centroid of the ponds.
 --
--- ANSWER: 'POINT( 25 42 )'
+-- ANSWER: POINT(25 42)
 --
 --================================
 --
@@ -777,7 +780,7 @@ WHERE fid = 120;
 -- Area(ms MultiSurface) : Double Precision
 -- For this test we will determine the area of the ponds.
 --
--- ANSWER: 8.00 (square meters)
+-- ANSWER: 8.00 
 --
 --================================
 --
@@ -807,7 +810,7 @@ WHERE fid = 120;
 --
 --================================
 --
-SELECT Equals(boundary, ST_PolygonFromText('POLYGON( ( 67 13, 67 18, 59 18, 59 13, 67 13) )',1))
+SELECT Equals(boundary, ST_PolygonFromText('ST_POLYGON( ( 67 13, 67 18, 59 18, 59 13, 67 13) )',1))
 FROM named_places 
 WHERE name = 'Goose Island';
 --
@@ -1098,7 +1101,7 @@ WHERE forests.name = 'Green Forest' AND named_places.name = 'Ashton';
 -- ST_Distance(g1 Geometry, g2 Geometry) : Double Precision
 -- For this test we will determine the distance between Cam Bridge and Ashton.
 --
--- ANSWER: 12 (meters)
+-- ANSWER: 12 
 --
 --================================
 --
@@ -1120,7 +1123,7 @@ WHERE bridges.name = 'Cam Bridge' AND named_places.name = 'Ashton';
 -- For this test we will determine the intersection between Cam Stream and 
 -- Blue Lake.
 --
--- ANSWER: 'POINT( 52 18 )'
+-- ANSWER: POINT(52 18)
 --
 --================================
 --
@@ -1153,7 +1156,7 @@ WHERE streams.name = 'Cam Stream' AND lakes.name = 'Blue Lake';
 -- For this test we will determine the difference between Ashton and 
 -- Green Forest.
 --
--- ANSWER: 'POLYGON( ( 56 34, 62 48, 84 48, 84 42, 56 34) )'
+-- ANSWER: POLYGON((56 34, 62 48, 84 48, 84 42, 56 34))
 -- NOTE: The order of the vertices here is arbitrary.
 --
 --================================
@@ -1188,8 +1191,7 @@ WHERE named_places.name = 'Ashton' AND forests.name = 'Green Forest';
 -- Union(g1 Geometry, g2 Geometry) : Integer
 -- For this test we will determine the union of Blue Lake and Goose Island 
 --
--- ANSWER: 'POLYGON((52 18,66 23,73 9,48 6,52 18))'
--- NOTE: The outer ring of Blue Lake is the answer.
+-- ANSWER: POLYGON((52 18,66 23,73 9,48 6,52 18))
 --
 --================================
 --
@@ -1227,8 +1229,7 @@ WHERE lakes.name = 'Blue Lake' AND named_places.name = 'Goose Island';
 -- For this test we will determine the symmetric difference of Blue Lake 
 -- and Goose Island 
 --
--- ANSWER: 'POLYGON((52 18,66 23,73 9,48 6,52 18))'
--- NOTE: The outer ring of Blue Lake is the answer.
+-- ANSWER: POLYGON((52 18,66 23,73 9,48 6,52 18))
 --
 --================================
 --
@@ -1304,8 +1305,7 @@ WHERE ST_Contains(ST_Buffer(bridges.position, 15.0), buildings.footprint);
 -- ST_ConvexHull(g Geometry) : Geometry
 -- For this test we will determine the convex hull of Blue Lake 
 --
--- ANSWER: 'POLYGON((52 18,66 23,73 9,48 6,52 18))'
--- NOTE: The outer ring of Blue Lake is the answer.
+-- ANSWER: POLYGON((52 18,66 23,73 9,48 6,52 18))
 --
 --================================
 --
