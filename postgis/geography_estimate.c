@@ -939,7 +939,11 @@ compute_geography_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 	if ( ! notnull_cnt )
 	{
 		elog(NOTICE, " no notnull values, invalid stats");
+#if defined (HQ_VERSION_NUM) && HQ_VERSION_NUM == 20000
+		stats->pgstat.stats_valid = false;
+#else
 		stats->stats_valid = false;
+#endif
 		return;
 	}
 
@@ -1389,7 +1393,11 @@ compute_geography_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 	if ( ! examinedsamples )
 	{
 		elog(NOTICE, " no examined values, invalid stats");
+#if defined (HQ_VERSION_NUM) && HQ_VERSION_NUM == 20000
+        stats->pgstat.stats_valid = false;
+#else
 		stats->stats_valid = false;
+#endif
 
 		POSTGIS_DEBUG(3, " no stats have been gathered");
 
@@ -1435,6 +1443,26 @@ compute_geography_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 	/*
 	 * Write the statistics data
 	 */
+#if defined (HQ_VERSION_NUM) && HQ_VERSION_NUM == 20000
+    stats->pgstat.stakind[0] = STATISTIC_KIND_GEOGRAPHY;
+    stats->pgstat.staop[0] = InvalidOid;
+    stats->pgstat.stanumbers[0] = (float4 *)geogstats;
+    stats->pgstat.numnumbers[0] = geog_stats_size/sizeof(float4);
+
+    stats->pgstat.stanullfrac = (float4)(samplerows - notnull_cnt)/samplerows;
+    stats->pgstat.stawidth = total_width/notnull_cnt;
+    stats->pgstat.stadistinct = -1.0;
+
+    POSTGIS_DEBUGF(3, " out: slot 0: kind %d (STATISTIC_KIND_GEOGRAPHY)",
+                   stats->pgstat.stakind[0]);
+    POSTGIS_DEBUGF(3, " out: slot 0: op %d (InvalidOid)", stats->pgstat.staop[0]);
+    POSTGIS_DEBUGF(3, " out: slot 0: numnumbers %d", stats->pgstat.numnumbers[0]);
+    POSTGIS_DEBUGF(3, " out: null fraction: %d/%d=%g", (samplerows - notnull_cnt), samplerows, stats->pgstat.stanullfrac);
+    POSTGIS_DEBUGF(3, " out: average width: %d bytes", stats->pgstat.stawidth);
+    POSTGIS_DEBUG(3, " out: distinct values: all (no check done)");
+
+    stats->pgstat.stats_valid = true;
+#else
 	stats->stakind[0] = STATISTIC_KIND_GEOGRAPHY;
 	stats->staop[0] = InvalidOid;
 	stats->stanumbers[0] = (float4 *)geogstats;
@@ -1453,7 +1481,7 @@ compute_geography_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 	POSTGIS_DEBUG(3, " out: distinct values: all (no check done)");
 
 	stats->stats_valid = true;
-
+#endif
 }
 
 
