@@ -2154,6 +2154,9 @@ CREATE OR REPLACE FUNCTION DropGeometryTable(table_name varchar) RETURNS text AS
 $$ SELECT DropGeometryTable('','',$1) $$
 LANGUAGE 'sql' VOLATILE STRICT;
 
+#if defined (HQ_VERSION_NUM) && HQ_VERSION_NUM == 20000
+
+#else
 -----------------------------------------------------------------------
 -- UPDATEGEOMETRYSRID
 --   <catalogue>, <schema>, <table>, <column>, <srid>
@@ -2286,6 +2289,7 @@ BEGIN
 END;
 $$
 LANGUAGE 'plpgsql' VOLATILE STRICT;
+#endif
 
 -----------------------------------------------------------------------
 -- FIND_SRID( <schema>, <table>, <geom col> )
