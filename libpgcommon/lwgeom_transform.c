@@ -123,7 +123,6 @@ PROJ4SRSCacheStats(MemoryContext context, int level);
 #endif
 
 static void PROJ4SRSCacheReleaseAccounting(MemoryContext context);
-static void PROJ4SRSCacheUpdateGeneration(MemoryContext context);
 
 #ifdef MEMORY_CONTEXT_CHECKING
 static void PROJ4SRSCacheCheck(MemoryContext context);
@@ -148,8 +147,7 @@ static MemoryContextMethods PROJ4SRSCacheContextMethods =
 	 * required for the MemoryContextMethods changes due to memory monitoring
 	 * framework (MPP-23033)
 	 */
-	PROJ4SRSCacheReleaseAccounting,
-	PROJ4SRSCacheUpdateGeneration
+	PROJ4SRSCacheReleaseAccounting
 #ifdef MEMORY_CONTEXT_CHECKING
 	,PROJ4SRSCacheCheck
 #endif
@@ -238,17 +236,6 @@ PROJ4SRSCacheReleaseAccounting(MemoryContext context)
 	 * context. As this context has no allocator method, we never accounted
 	 * for any of the allocations. Therefore, releasing accounting does not
 	 * make any sense.
-	 */
-}
-
-static void
-PROJ4SRSCacheUpdateGeneration(MemoryContext context)
-{
-	/*
-	 * This is currently just an skeleton method. The MemoryContextMethods
-	 * need a method that can update generations of all the chunks. However,
-	 * this context never had any allocation with a chunk header and so we
-	 * don't need a method to update the generation.
 	 */
 }
 
